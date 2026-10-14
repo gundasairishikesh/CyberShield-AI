@@ -1,0 +1,195 @@
+Project Title: CyberShield AI – AI-Powered Digital Threat Detection System
+
+1. Project Overview
+
+Build a modern, responsive, AI-powered cybersecurity web application called CyberShield AI that helps users identify potential online threats, including phishing URLs, fraudulent messages, suspicious links, and scam-related communication.
+
+The main objective is to make cybersecurity understandable and accessible to students, farmers, and people with limited technical knowledge. The application must analyze user-provided information, explain potential risks in simple language, and recommend appropriate safety precautions.
+
+2. Technology Stack
+
+- Frontend: HTML, CSS, JavaScript, and responsive UI components.
+- Backend: Python with Flask or FastAPI for threat analysis.
+- Database: Firebase Firestore for storing user history, scan results, and user preferences.
+- Authentication: Firebase Authentication with email and password.
+- AI Integration: Design the system so that a machine learning model or an external AI API can be integrated for threat classification and natural-language explanations.
+- Hosting: Firebase Hosting or Firebase App Hosting, depending on framework compatibility.
+
+Use Firebase services wherever appropriate. Keep the backend and AI analysis components modular so they can be upgraded later.
+
+3. Main Features
+
+A. Interactive Dashboard
+
+Create a professional cybersecurity dashboard containing:
+
+- Total scans performed.
+- Number of suspicious URLs detected.
+- Number of potentially fraudulent messages detected.
+- Recent scan history.
+- A visual summary of threat levels.
+- A prominent button to start a new security scan.
+
+B. URL Threat Scanner
+
+Allow users to enter a URL for analysis.
+
+Check for suspicious indicators such as:
+
+- Misspelled or deceptive domain names.
+- Unusually long URLs.
+- Misleading subdomains.
+- Suspicious URL structures and encoded characters.
+- IP addresses used instead of recognizable domain names.
+- Suspicious redirects, when safely and reliably detectable.
+- Known malicious URLs through an approved threat-intelligence service, if configured.
+
+Display a risk level: Low, Medium, or High.
+
+Show the indicators that influenced the assessment and provide understandable recommendations.
+
+Do not automatically open or visit user-submitted URLs. Perform analysis safely, without executing scripts or downloading files from potentially malicious websites.
+
+C. Fraudulent Message Analyzer
+
+Provide a text area where users can paste suspicious SMS messages, emails, or social media messages.
+
+Analyze indicators such as:
+
+- Urgent demands for immediate action.
+- Requests for passwords, OTPs, or banking details.
+- Suspicious payment requests.
+- Impersonation of banks, companies, or government organizations.
+- Unexpected prize or reward claims.
+- Suspicious links and misleading contact information.
+
+Return a risk level, suspicious phrases, explanations, and recommended next steps.
+
+Do not claim a message is definitely fraudulent based only on one indicator.
+
+D. Explainable AI Threat Assessment
+
+For every scan, display:
+
+- Risk level.
+- Risk score from 0 to 100.
+- Reasons behind the assessment.
+- Suspicious patterns identified.
+- Recommended precautions.
+- A brief explanation in simple, beginner-friendly language.
+
+Use a consistent scoring system and clearly communicate uncertainty. If no trained AI model or threat-intelligence API is configured, use a transparent rule-based analysis engine and label it accordingly. Never pretend that a real AI model or live threat database is connected when it is not.
+
+E. Multilingual Cybersecurity Assistant
+
+Create an interface that can explain threats in simple language and support multiple languages, initially English, Hindi, and Telugu.
+
+Allow users to switch languages. Keep the language system modular so more languages can be added later.
+
+If AI translation is not configured, provide available predefined translations rather than falsely claiming automatic translation.
+
+F. Cybersecurity Awareness Center
+
+Add an educational section containing:
+
+- Common online scams.
+- Phishing awareness.
+- Password safety.
+- OTP and banking fraud prevention.
+- Safe browsing practices.
+- Short educational tutorials and quizzes.
+- Interactive examples of suspicious versus legitimate messages.
+
+Use illustrations, icons, cards, and simple diagrams instead of long blocks of text.
+
+G. Scan History
+
+Allow authenticated users to view their previous scan results, including:
+
+- Submitted input or a privacy-conscious summary.
+- Scan date and time.
+- Risk level.
+- Detected indicators.
+- Recommended precautions.
+
+Provide an option to delete individual records or clear scan history. Avoid storing passwords, OTPs, banking details, or other unnecessary sensitive information.
+
+H. User-Friendly Design
+
+Create a polished, modern cybersecurity interface with:
+
+- A dark navy and blue visual theme.
+- Clear typography and accessible color contrast.
+- A responsive layout for mobile, tablet, and desktop.
+- Simple navigation and informative icons.
+- Threat-level indicators using text and color.
+- Loading indicators, validation messages, and error handling.
+- Tooltips and beginner-friendly explanations.
+
+Include these pages:
+
+1. Home / Landing Page
+2. Dashboard
+3. URL Scanner
+4. Message Analyzer
+5. Scan Results
+6. Scan History
+7. Cybersecurity Learning Center
+8. Login / Registration
+9. Settings and Language Preferences
+
+4. Firebase Database Design
+
+Use Firebase Firestore with a suitable structure, such as:
+
+- "users": user profile, preferred language, and account settings.
+- "scans": scan type, result, risk score, detected indicators, timestamp, and owner UID.
+- "learning_progress": quiz results and completed awareness modules.
+
+Enforce Firestore security rules so users can only access their own private records. Never place Firebase Admin credentials, secret API keys, or private service credentials in frontend code.
+
+Validate all submitted data on the backend and add sensible input-length limits and rate limiting.
+
+5. Security Requirements
+
+- Use Firebase Authentication for protected features.
+- Apply strict Firestore security rules.
+- Validate and sanitize all inputs.
+- Avoid exposing sensitive data in logs.
+- Protect API credentials using appropriate server-side secret management.
+- Prevent unsafe URL fetching and server-side request forgery.
+- Use HTTPS in production.
+- Add clear privacy notices and user-controlled history deletion.
+- Do not collect or store real passwords, OTPs, or banking credentials for testing.
+- Use synthetic sample data for demonstrations.
+
+6. Sample Demonstration
+
+Include a demo mode with fictional examples:
+
+- A suspicious message claiming that a bank account will be blocked.
+- A fictional prize-winning message requesting a fee.
+- A harmless sample URL.
+- A fictional message requesting an OTP.
+
+When users analyze these examples, show the risk score, detected indicators, explanation, and safety recommendations. Clearly label demo results as examples rather than verified live threat detections.
+
+7. Implementation Instructions
+
+Build the application in functional stages:
+
+Stage 1: Create the responsive frontend, navigation, dashboard, URL scanner form, and message analyzer form.
+
+Stage 2: Implement the backend threat-analysis endpoints using Python and a transparent rule-based engine.
+
+Stage 3: Integrate Firebase Authentication and Firestore.
+
+Stage 4: Add explainable risk scoring, scan history, multilingual support, and educational modules.
+
+Stage 5: Prepare the application for deployment and test the major workflows.
+
+Generate real, connected functionality rather than a static mockup. All buttons and forms must work. Include setup instructions, environment-variable configuration, Firebase configuration guidance, and instructions for running the backend.
+
+If a feature requires an external API, trained model, or additional configuration, identify that dependency and provide a working fallback where practical. Do not fabricate API responses or claim unimplemented features are functional.
+
+Start by generating the complete initial application structure and a working Stage 1 prototype, then continue implementing the backend and Firebase integration.

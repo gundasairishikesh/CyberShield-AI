@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: analysis
+    description: Safe, explainable threat analysis
 paths:
   /healthz:
     get:
@@ -24,6 +26,66 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /analyze/url:
+    post:
+      operationId: analyzeUrl
+      tags: [analysis]
+      summary: Analyze a URL without visiting it
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UrlScanInput"
+      responses:
+        "200":
+          description: Rule-based threat assessment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThreatAssessment"
+        "400":
+          description: Invalid URL input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /analyze/message:
+    post:
+      operationId: analyzeMessage
+      tags: [analysis]
+      summary: Analyze a suspicious message using transparent rules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageScanInput"
+      responses:
+        "200":
+          description: Rule-based threat assessment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThreatAssessment"
+        "400":
+          description: Invalid message input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +95,95 @@ components:
           type: string
       required:
         - status
+    Language:
+      type: string
+      enum: [en, hi, te]
+    RiskLevel:
+      type: string
+      enum: [low, medium, high]
+    ScanKind:
+      type: string
+      enum: [url, message]
+    UrlScanInput:
+      type: object
+      additionalProperties: false
+      properties:
+        url:
+          type: string
+          minLength: 1
+          maxLength: 4096
+        language:
+          $ref: "#/components/schemas/Language"
+      required: [url]
+    MessageScanInput:
+      type: object
+      additionalProperties: false
+      properties:
+        message:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        language:
+          $ref: "#/components/schemas/Language"
+      required: [message]
+    ThreatIndicator:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        detail:
+          type: string
+      required: [code, title, detail]
+    ThreatAssessment:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+        kind:
+          $ref: "#/components/schemas/ScanKind"
+        riskLevel:
+          $ref: "#/components/schemas/RiskLevel"
+        riskScore:
+          type: integer
+          minimum: 0
+          maximum: 100
+        indicators:
+          type: array
+          items:
+            $ref: "#/components/schemas/ThreatIndicator"
+        recommendations:
+          type: array
+          items:
+            type: string
+        explanation:
+          type: string
+        engine:
+          type: string
+          enum: [rule-based]
+        evaluatedAt:
+          type: string
+          format: date-time
+        language:
+          $ref: "#/components/schemas/Language"
+      required:
+        - id
+        - kind
+        - riskLevel
+        - riskScore
+        - indicators
+        - recommendations
+        - explanation
+        - engine
+        - evaluatedAt
+        - language
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required: [error]
 

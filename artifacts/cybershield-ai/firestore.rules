@@ -1,0 +1,50 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedInAs(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId} {
+      allow read: if signedInAs(userId);
+      allow create, update: if signedInAs(userId)
+        && request.resource.data.keys().hasOnly(['preferredLanguage', 'createdAt'])
+        && (!('preferredLanguage' in request.resource.data)
+          || request.resource.data.preferredLanguage in ['en', 'hi', 'te']);
+      allow delete: if signedInAs(userId);
+
+      match /scans/{scanId} {
+        allow read, delete: if signedInAs(userId);
+        allow create: if signedInAs(userId)
+          && request.resource.data.keys().hasOnly([
+            'kind', 'hostname', 'riskLevel', 'riskScore',
+            'indicators', 'recommendations', 'evaluatedAt', 'createdAt'
+          ])
+          && request.resource.data.kind in ['url', 'message']
+          && request.resource.data.riskLevel in ['low', 'medium', 'high']
+          && request.resource.data.riskScore is int
+          && request.resource.data.riskScore >= 0
+          && request.resource.data.riskScore <= 100
+          && request.resource.data.indicators is list
+          && request.resource.data.indicators.size() <= 20
+          && request.resource.data.recommendations is list
+          && request.resource.data.createdAt is timestamp
+          && request.resource.data.evaluatedAt is string
+          && (!('hostname' in request.resource.data)
+            || (request.resource.data.hostname is string
+              && request.resource.data.hostname.size() <= 253));
+        allow update: if false;
+      }
+
+      match /learning_progress/{moduleId} {
+        allow read: if signedInAs(userId);
+        allow create, update: if signedInAs(userId)
+          && request.resource.data.keys().hasOnly(['completed', 'updatedAt'])
+          && request.resource.data.completed is bool
+          && request.resource.data.updatedAt is timestamp;
+        allow delete: if signedInAs(userId);
+      }
+    }
+  }
+}
